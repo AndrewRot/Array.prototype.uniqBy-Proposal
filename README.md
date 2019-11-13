@@ -39,10 +39,7 @@ Implementation 1.b:
 ```
 Array.prototype.uniqBy = function(getFields) {
   let reducedObjects = this.map(getFields);
-  // TODO insert reducedObjects in record
-  let records = reducedObjects.map(obj => new ImmutableRecord(obj));
-  // TODO find out what ImmutableRecord equality method looks like... (.equals(..))?
-  // TODO Or use a compare function with just (x, y) => x.equals(y).... 
+  let records = reducedObjects.map(#obj);
   let set = new Set(reducedObjects);
   return Array.from(set)
     .map(x => reducedObjects.indexOf(x))
