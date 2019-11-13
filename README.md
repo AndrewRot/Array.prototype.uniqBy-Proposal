@@ -33,7 +33,7 @@ Array.prototype.uniqBy = function(getFields) {
 }
 ```
 
-This implementation works well when uniquing by a single field. However, becomes problematic when you wish to uniqBy using multiple fields on an object. This could be improved by using Immutable Records, see proposal: link to it. Immutable Records have built-in object equality which could be used in the following way to support uniqBy multiple fields:
+This implementation works well when uniquing by a single field. However, becomes problematic when you wish to uniqBy using multiple fields on an object. This could be improved by using Immutable Records, see (proposal)[https://github.com/tc39/proposal-record-tuple]. Immutable Records have built-in object equality which could be used in the following way to support uniqBy multiple fields:
 
 Implementation 1.b:
 ```
