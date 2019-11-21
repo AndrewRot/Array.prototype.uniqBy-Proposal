@@ -17,13 +17,13 @@ There are many implementations of this function across Github, see [here](https:
 
 Developers are forced to either implement this functionality themselves, or rely on third party libraries such as Lodash, which offers the same interface as proposed here.
 
-[Lodash’s uniqBy](https://www.npmjs.com/package/lodash.uniqby) function alone has almost half a million weekly downloads. This sits about high up the table for their most commonly used functions. It is their 7th most popular out of the 65 base functions the libraries comes with. See the table here.
+[Lodash’s uniqBy](https://www.npmjs.com/package/lodash.uniqby) function alone has almost half a million weekly downloads. This sits about high up the table for their most commonly used functions. It is their 7th most popular out of the 65 base functions the libraries comes with. See a comparison table for Lodash function popularity [here](https://github.com/AndrewRot/lodash-function-usage/blob/master/README.md).
 
 [Ramda’s uniqBy](https://ramdajs.com/docs/#uniqBy) is another popular function implementation. Their complete library has over 5 million weekly downloads.
 
 ## Solutions
 
-There are a couple of ways this functionality could be implemented. Two implementations are listed below.
+There are a couple of ways this functionality could be implemented. Two implementations are  listed below.
 
 ### Map to a canonical representative of an equivalence class:
 
@@ -50,16 +50,19 @@ Array.prototype.uniqBy = function(generateRepresentative) {
 
 #### Difficulties 
 
-This implementation works well when mapping to a single primitive value representative. However, becomes problematic when you wish to uniqBy a combination of values. 
+This implementation works well when mapping to a single value representative. However, becomes problematic when you wish to uniqBy a combination of values. 
 
 #### How immutable records/tuples makes this API great
 
 This could be improved by using the [Immutable Records proposal](https://github.com/tc39/proposal-record-tuple). Immutable Records have built-in value equality which could be used in the following way to support uniqBy on multiple values:
 
-```
+Implementation 1.b:
+
+```js
 [ {a: 1, b: 1},  {a: 1, b: 2} ].uniqBy(x => #[ x.a, x.b ]); // [ {a: 1, b: 1},  {a: 1, b: 2} ]
 ```
 
+Both versions of implementation 1 have O(n) time complexity.
 
 ### Provide a compare method
 
@@ -73,7 +76,7 @@ An alternative implementation of uniqBy would consume a comparison method which 
 [ {a: 1, b: {c: 2}},  {a: 2, b: {c: 2}} ].uniqBy((x, y) => x.b.c === y.b.c); // [ {a: 1, b: {c: 2}} ]
 ```
 
-Implementation:
+Implementation 2.a:
 ```
 Array.prototype.uniqBy = function(compare) {
   let out = [];
@@ -94,19 +97,6 @@ This implementation yields an unideal performance time, ~O(n^2).
 The API allows for a comparator that does not actually define a partial ordering, which means a user could use this implementation in unintended ways. There are no safeguards around someone passing `(x, y) => x.a > y.a` to the compare function, which could yield confusing results.
 
 
-## Comparison of implementations
-
-
-| Implementation                   | 1.a  | 1.b  | 2.a    |
-|----------------------------------|------|------|--------|
-| Uniquing on single  property     | X    | X    | X      |
-| Uniquing on multiple  properties | -    | X    | X      |
-| Possibility for misuse           | -    | -    | X      |
-| Performance                      | O(n) | O(n) | O(n^2) |
-| Requires other proposal to merge | -    | X    | -      |
-
-
-
 Additional information: 
 
-There is a node module, [array-unique](https://www.npmjs.com/package/array-unique), which has similar behavior. This module has over 13 million weekly downloads. However, this implementation only for doing so on a single field.
+There is a node module, [array-unique](https://www.npmjs.com/package/array-unique), which has similar behavior. This module has over 13 million weekly downloads. However, this implementation only for doing so on a single value.
